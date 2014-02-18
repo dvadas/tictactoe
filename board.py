@@ -65,7 +65,7 @@ class Board(object):
 
         raise ValueError('invalid move: %s' % human)
 
-   def apply(self, player, square):
+    def apply(self, player, square):
         self._moves.append(square)
         square.player = player
 
