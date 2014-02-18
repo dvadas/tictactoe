@@ -43,6 +43,9 @@ class Board(object):
         self._winSize = winSize
 
         self._moves = []
+        self._winner = None
+        self._winningLine = None
+
         squareIndexes = itertools.product(xrange(size), repeat=dimensions)
         self._squares = [Square(i, indexes) for i, indexes in enumerate(squareIndexes)]
 
@@ -58,6 +61,14 @@ class Board(object):
     def __str__(self):
         return ' '.join(str(square) for square in self._squares)
 
+    @property
+    def winner(self):
+        return self._winner
+
+    @property
+    def winningLine(self):
+        return self._winningLine
+
     def getByHuman(self, human):
         for square in self._squares:
             if square.human == human.upper():
@@ -69,27 +80,20 @@ class Board(object):
         self._moves.append(square)
         square.player = player
 
+        self._checkVictory(square)
+
     def finished(self):
-        if len(self._moves) == len(self._squares):
-            print 'draw'
-            return True
+        return len(self._moves) == len(self._squares) or self._winner is not None
 
-        try:
-            lastMove = self._moves[-1]
-        except IndexError:
-            return False
-
+    def _checkVictory(self, lastMove):
         player = lastMove.player
         for direction, reverse in self._directions:
             forwards = self._findLine(player, lastMove, direction)
             backwards = self._findLine(player, lastMove, reverse)
             if len(forwards) + len(backwards) + 1 >= self._winSize:
-                winningLine = forwards + [lastMove] + backwards
-                print 'winner:', player
-                print ' '.join(map(str, winningLine))
-                return True
-
-        return False
+                self._winningLine = backwards + [lastMove] + forwards
+                self._winner = player
+                break
 
     def _findLine(self, player, square, direction):
         sumIndexes = 0
