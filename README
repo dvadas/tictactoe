@@ -45,7 +45,7 @@ Draws: 1
 
   * 3-dimensional tic-tac-toe:
 
-/usr/hons2004/dvadas1/git/ttt)./main.py -1 Human -2 Human -d3
+/usr/hons2004/dvadas1/git/ttt)./main.py -vvv -d3
 A11:  A12:  A13:
 A21:  A22:  A23:
 A31:  A32:  A33:
@@ -56,16 +56,22 @@ A31:  A32:  A33:
                 C21:  C22:  C23:
                 C31:  C32:  C33:
 
-Enter your move: b22
-A11:  A12:  A13:
-A21:  A22:  A23:
-A31:  A32:  A33:
-        B11:  B12:  B13:
-        B21:  B22:X B23:
-        B31:  B32:  B33:
-                C11:  C12:  C13:
-                C21:  C22:  C23:
-                C31:  C32:  C33:
+...
+
+A11:  A12:X A13:O
+A21:X A22:  A23:
+A31:O A32:  A33:O
+        B11:O B12:  B13:X
+        B21:X B22:  B23:O
+        B31:X B32:  B33:X
+                C11:  C12:X C13:O
+                C21:  C22:O C23:O
+                C31:  C32:  C33:X
+
+Game 1 - Player 2 (O) won through [ A33:O B23:O C13:O ]
+Player 2 (O) wins: 1
+Player 1 (X) wins: 0
+Draws: 0
 
   * A 4-dimensional board:
 
@@ -100,7 +106,7 @@ C131:  C132:  C133:
                 C321:  C322:  C323:
                 C331:  C332:  C333:
 
-  * Simulation a large number of AI-controlled games:
+  * Simulating a large number of AI-controlled games:
 
 /usr/hons2004/dvadas1/git/ttt)time ./main.py -g 10000
 Player 1 (X) wins: 4341
