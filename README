@@ -1,0 +1,124 @@
+Play a d,n,k game, where:
+    d is the number of dimensions;
+    n is the square board size;
+    k is how long a winning run needs to be.
+
+For example, standard tic-tac-toe on a 3x3 board is d=2, n=3, k=3.
+
+Example Usage
+
+  * A single game between two computer-controlled players choosing random moves:
+
+/usr/hons2004/dvadas1/git/ttt)./main.py
+Player 2 (O) wins: 1
+Player 1 (X) wins: 0
+Draws: 0
+
+  * A game between two human players:
+
+/usr/hons2004/dvadas1/git/ttt)./main.py -1 Human -2 Human
+A1:  A2:  A3:
+B1:  B2:  B3:
+C1:  C2:  C3:
+
+Enter your move: a1
+A1:X A2:  A3:
+B1:  B2:  B3:
+C1:  C2:  C3:
+
+Enter your move: b2
+A1:X A2:  A3:
+B1:  B2:O B3:
+C1:  C2:  C3:
+
+...
+
+Enter your move: b3
+A1:X A2:X A3:O
+B1:O B2:O B3:X
+C1:X C2:O C3:X
+
+Game 1 - Draw
+Player 2 (O) wins: 0
+Player 1 (X) wins: 0
+Draws: 1
+
+  * 3-dimensional tic-tac-toe:
+
+/usr/hons2004/dvadas1/git/ttt)./main.py -1 Human -2 Human -d3
+A11:  A12:  A13:
+A21:  A22:  A23:
+A31:  A32:  A33:
+        B11:  B12:  B13:
+        B21:  B22:  B23:
+        B31:  B32:  B33:
+                C11:  C12:  C13:
+                C21:  C22:  C23:
+                C31:  C32:  C33:
+
+Enter your move: b22
+A11:  A12:  A13:
+A21:  A22:  A23:
+A31:  A32:  A33:
+        B11:  B12:  B13:
+        B21:  B22:X B23:
+        B31:  B32:  B33:
+                C11:  C12:  C13:
+                C21:  C22:  C23:
+                C31:  C32:  C33:
+
+  * A 4-dimensional board:
+
+/usr/hons2004/dvadas1/git/ttt)./main.py -1 Human -2 Human -d4
+A111:  A112:  A113:
+A121:  A122:  A123:
+A131:  A132:  A133:
+        A211:  A212:  A213:
+        A221:  A222:  A223:
+        A231:  A232:  A233:
+                A311:  A312:  A313:
+                A321:  A322:  A323:
+                A331:  A332:  A333:
+
+B111:  B112:  B113:
+B121:  B122:  B123:
+B131:  B132:  B133:
+        B211:  B212:  B213:
+        B221:  B222:  B223:
+        B231:  B232:  B233:
+                B311:  B312:  B313:
+                B321:  B322:  B323:
+                B331:  B332:  B333:
+
+C111:  C112:  C113:
+C121:  C122:  C123:
+C131:  C132:  C133:
+        C211:  C212:  C213:
+        C221:  C222:  C223:
+        C231:  C232:  C233:
+                C311:  C312:  C313:
+                C321:  C322:  C323:
+                C331:  C332:  C333:
+
+  * Simulation a large number of AI-controlled games:
+
+/usr/hons2004/dvadas1/git/ttt)time ./main.py -g 10000
+Player 1 (X) wins: 4341
+Player 2 (O) wins: 4371
+Draws: 1288
+
+real    0m7.902s
+user    0m7.764s
+sys     0m0.063s
+
+  * More AI-controlled games, where Player 1 uses a better decision making process:
+
+/usr/hons2004/dvadas1/git/ttt)time ./main.py -g 10000 -1 Centre
+Player 1 (X) wins: 6024
+Player 2 (O) wins: 3182
+Draws: 794
+
+real    0m8.403s
+user    0m8.235s
+sys     0m0.070s
+
