@@ -49,17 +49,47 @@ class Board(object):
         squareIndexes = itertools.product(xrange(size), repeat=dimensions)
         self._squares = [Square(i, indexes) for i, indexes in enumerate(squareIndexes)]
 
-        directions = itertools.product([0, 1], repeat=dimensions)
+        directions = itertools.product([0, 1, -1], repeat=dimensions)
         self._directions = []
         for direction in directions:
-            if sum(direction) == 0:
+            if all(digit == 0 for digit in direction):
                 continue
 
-            reverse = [-value for value in direction]
-            self._directions.append((direction, reverse))
+            reverse = tuple(-value for value in direction)
+            if direction > reverse:
+                self._directions.append((direction, reverse))
+
+    @property
+    def dimensions(self):
+        return self._dimensions
+
+    @property
+    def size(self):
+        return self._size
 
     def __str__(self):
         return ' '.join(str(square) for square in self._squares)
+
+    def _humanReadableStr(self, squares, dimension, prefix):
+        separators = [
+            (' ', ''),
+            ('\n', ''),
+            ('\n', '\t'),
+        ]
+        try:
+            separator, nextPrefix = separators[self._dimensions - dimension - 1]
+        except IndexError:
+            repeats = self._dimensions - dimension - len(separators) + 1
+            separator, nextPrefix = '\n' * repeats, ''
+
+        if dimension < self._dimensions - 1:
+            groups = itertools.groupby(squares, lambda square: square.indexes[dimension])
+            squares = (self._humanReadableStr(group, dimension + 1, nextPrefix * i) for i, (key, group) in enumerate(groups))
+
+        return separator.join('%s%s' % (prefix, square) for square in squares)
+
+    def humanReadableStr(self):
+        return self._humanReadableStr(self._squares, 0, '')
 
     @property
     def winner(self):
@@ -89,6 +119,7 @@ class Board(object):
         player = lastMove.player
         for direction, reverse in self._directions:
             forwards = self._findLine(player, lastMove, direction)
+            forwards.reverse()
             backwards = self._findLine(player, lastMove, reverse)
             if len(forwards) + len(backwards) + 1 >= self._winSize:
                 self._winningLine = backwards + [lastMove] + forwards

@@ -4,9 +4,10 @@ import itertools
 import optparse
 from collections import defaultdict
 
-from players import Player, Human, Random
+from players import Player, Human, Random, Centre
 from board import Board, Square
 
+VERBOSE_FINAL_RESULTS, VERBOSE_GAME_END, VERBOSE_MOVE, VERBOSE_HUMAN = range(4)
 def main():
     optparser = optparse.OptionParser('usage: %prog [options]')
     optparser.add_option('-d', '--dimensions', type=int, default=2)
@@ -15,7 +16,7 @@ def main():
     optparser.add_option('-1', '--player1', default='Random')
     optparser.add_option('-2', '--player2', default='Random')
     optparser.add_option('-g', '--games', type=int, default=1)
-    optparser.add_option('-v', '--verbose', action='store_true')
+    optparser.add_option('-v', '--verbose', action='count', default=0)
 
     opts, args = optparser.parse_args()
 
@@ -25,7 +26,7 @@ def main():
 
     verbose = opts.verbose
     if any(isinstance(player, Human) for player in players):
-        verbose = True
+        verbose = VERBOSE_HUMAN
 
     wins = defaultdict(int)
     for i in xrange(opts.games):
@@ -33,8 +34,11 @@ def main():
         play(board, players, verbose)
         winner = board.winner
         wins[winner] += 1
-        if verbose:
-            print board
+        if verbose >= VERBOSE_GAME_END:
+            if verbose >= VERBOSE_HUMAN:
+                print board.humanReadableStr() + '\n'
+            else:
+                print board
             print 'Game %d -' % (i + 1),
             if winner is None:
                 print 'Draw'
@@ -42,14 +46,18 @@ def main():
                 winningLine = ' '.join(map(str, board.winningLine))
                 print '%s won through [ %s ]' % (winner, winningLine)
 
-    for player in players:
-        print '%s wins: %d' % (player, wins[player])
-    print 'Draws: %d' % wins[None]
+        players.reverse()
+
+    if verbose >= VERBOSE_FINAL_RESULTS:
+        for player in players:
+            print '%s wins: %d' % (player, wins[player])
+        print 'Draws: %d' % wins[None]
 
 def makePlayer(player, symbol, number):
     playerClasses = dict(
         Human = Human,
         Random = Random,
+        Centre = Centre,
     )
 
     try:
@@ -63,7 +71,9 @@ def play(board, players, verbose):
     # Take turns infinitely
     turns = itertools.cycle(players)
     for player in turns:
-        if verbose:
+        if verbose >= VERBOSE_HUMAN:
+            print board.humanReadableStr() + '\n'
+        elif verbose >= VERBOSE_MOVE:
             print board
         square = player.chooseMove(board)
         board.apply(player, square)
